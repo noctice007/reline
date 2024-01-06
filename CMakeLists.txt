@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(reline CXX)
 set(CMAKE_CXX_STANDARD 23)
-add_executable(${PROJECT_NAME} main.cpp tee.cpp)
+add_executable(${PROJECT_NAME} main.cpp tee.cpp config.cpp)
 find_package(Boost REQUIRED COMPONENTS program_options system)
 set(FMT_USE_STATIC_LIBS ON)
 find_package(fmt REQUIRED)

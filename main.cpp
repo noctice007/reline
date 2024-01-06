@@ -1,3 +1,4 @@
+#include "config.hpp"
 #include "tee.hpp"
 #include <boost/iostreams/device/null.hpp>
 #include <boost/iostreams/stream.hpp>
@@ -5,50 +6,13 @@
 #include <cctype>
 #include <fstream>
 #include <iostream>
-#include <optional>
 #include <ranges>
 #include <string>
 #include <unordered_set>
 #include <vector>
 
-namespace po = boost::program_options;
 namespace ranges = std::ranges;
 namespace views = ranges::views;
-
-struct Config {
-  explicit Config(int argc, char *argv[]) {
-    po::options_description desc;
-    desc.add_options()("help,h", "Display help message")(
-        "quite,q", "quiet mode (no output at all)")(
-        "trim,t", "trim leading and trailing whitespace before comparison")(
-        "file,f", po::value<std::string>(),
-        "File to append the output to")("sort,s", "Sort the lines");
-    po::positional_options_description pos_des;
-    pos_des.add("file", 1);
-    po::store(po::command_line_parser(argc, argv)
-                  .options(desc)
-                  .positional(pos_des)
-                  .run(),
-              vm);
-    if (vm.count("help")) {
-      std::cout << desc;
-      std::exit(0);
-    }
-    process();
-  }
-  void process() {
-    po::notify(vm);
-    filename = vm.count("file") > 0
-                   ? std::make_optional(vm["file"].as<std::string>())
-                   : std::nullopt;
-    trim = vm.count("trim") > 0;
-    quite = vm.count("quite") > 0;
-  }
-  std::optional<std::string> filename;
-  po::variables_map vm;
-  bool quite;
-  bool trim;
-};
 
 std::vector<std::string> input(std::istream &in) noexcept {
   std::vector<std::string> lines;

@@ -9,11 +9,8 @@ public:
   teebuf(std::streambuf *sb1, std::streambuf *sb2);
 
 private:
-  // This tee buffer has no buffer. So every character "overflows"
-  // and can be put directly into the teed buffers.
   virtual int overflow(int c);
 
-  // Sync both teed buffers.
   virtual int sync();
 
 private:
